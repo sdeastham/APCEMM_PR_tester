@@ -67,3 +67,6 @@ for codebase in base updated; do
     echo " --> run successful"
     echo ""
 done
+
+cd $start_loc
+./compare_runs.sh $pr_id
