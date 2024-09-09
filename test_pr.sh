@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N APCEMM_PR_test
 #PBS -l select=1:ncpus=1:mem=8gb
-#PBS -l walltime=1:00:00
+#PBS -l walltime=4:00:00
 #PBS -j oe
 
 cd $PBS_O_WORKDIR
@@ -68,5 +68,5 @@ for codebase in base updated; do
     echo ""
 done
 
-cd $start_loc
+cd $start_loc/..
 ./compare_runs.sh $pr_id
