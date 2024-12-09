@@ -176,7 +176,7 @@ METEOROLOGY MENU:
     Impose lapse rate (T/F): F
     Lapse rate [K/m] (T/F): -6.0E-03
   # ---END MET INPUT OPTIONS --- 
-  Add diurnal variations (T/F): T
+  Add diurnal variations (T/F): F
 
   # Perturbations to the temperature field can be added to the contrail simulation to account for some effects of 
   # atmospheric turbulence and gravity waves.

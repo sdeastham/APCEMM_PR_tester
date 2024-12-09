@@ -20,6 +20,8 @@ mkdir test_${pr_id}
 cd test_${pr_id}
 mkdir Run
 
+touch log.run
+run_log=$( readlink -f log.run )
 start_loc=$PWD
 
 for codebase in base updated; do
@@ -58,7 +60,8 @@ for codebase in base updated; do
     ln -s $APCEMM_binary APCEMM
     ln -s ../../Code.APCEMM_$codebase/input_data
     echo " --> beginning run"
-    ./APCEMM input.yaml &> log.run
+    echo "Run for $codebase case:"
+    time ./APCEMM input.yaml &> $run_log
     rc=$?
     if [[ $rc -ne 0 ]]; then
         echo " --> Running $codebase failed with return code $rc"
@@ -68,5 +71,5 @@ for codebase in base updated; do
     echo ""
 done
 
-cd $start_loc/..
+cd $PBS_O_WORKDIR
 ./compare_runs.sh $pr_id

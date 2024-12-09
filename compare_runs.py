@@ -163,32 +163,35 @@ def plot_data_diff(var,baseline,changed,n_times=None,clim=None):
     # Top row:    variable in the baseline dataset
     # Bottom row: difference resulting from the change to the new dataset
     im_vec = []
+    n_common = min(len(baseline[var]),len(changed[var]))
     if n_times is not None:
-        n_x = n_times
+        n_x = min(n_common,n_times)
     else:
-        n_x = len(baseline[var])
+        n_x = n_common
     f, ax_arr = plt.subplots(2,n_x,figsize=(3*n_x,4*2))
     # First plot the baseline, then plot the delta
     ax_vec = np.full((1,n_x),None)
     ax_vec[:] = ax_arr[0,:]
     im_new = plot_data(var,baseline,show_cbar=False,ax_arr=ax_vec,n_times=n_x)
-    
+
     # Do some interpolation
     delta_dict = {}
-    delta_dict['t'] = baseline['t']
+    delta_dict['t'] = baseline['t'][:n_common]
     delta_dict['x'] = []
     delta_dict['y'] = []
     delta_dict[var] = []
     i = 0
     x_to = np.arange(-1000,5000,10)
     y_to = np.arange(-1000,200,10)
-    for base_data, changed_data in zip(baseline[var],changed[var]):
+    #for base_data, changed_data in zip(baseline[var],changed[var]):
+    for i in range(n_common):
+        base_data = baseline[var][i]
+        changed_data = changed[var][i]
         delta_dict['x'].append(x_to)
         delta_dict['y'].append(y_to)
         base_interp = interp_apcemm(baseline['x'][i],baseline['y'][i],base_data,x_to,y_to)
         changed_interp = interp_apcemm(changed['x'][i],changed['y'][i],changed_data,x_to,y_to)
         delta_dict[var].append(changed_interp - base_interp)
-        i += 1
     ax_vec[:] = ax_arr[1,:]
     im_diff = plot_data(var,delta_dict,show_cbar=True,ax_arr=ax_vec,n_times=n_x)
     ## Make sure all axes use the same limits
