@@ -259,7 +259,9 @@ def mass_comparison(multidata,var='Ice Mass',ref='base'):
         n_steps = n_max - np.sum(np.isnan(data_vec))
         mass_err = (np.nansum(data_vec)/ref_mass - 1.0)
         print(f' --> {sim_name:20s}: {mass_err:0.4%} mass difference, lifetime {n_steps:d}')
-        max_err=max(max_err,mass_err)
+        #max_err=max(max_err,np.abs(mass_err))
+        if np.abs(mass_err) > np.abs(max_err):
+            max_err = mass_err
     return max_err
 
 if __name__ == '__main__':
@@ -280,7 +282,9 @@ if __name__ == '__main__':
 
     f, ax = plot_mass_multi(multidata)
     max_err = mass_comparison(multidata)
-    ax.set_title(f'Max integrated error: {max_err:0.5%}')
+    ax.set_title(f'Mass change with update: {max_err:0.5%}')
+    ax.set_ylabel('Ice mass, kg per meter')
+    ax.set_xlabel('Time, minutes')
     f.savefig(os.path.join(pr_dir,'Mass_Comparison_1D.png'))
     plt.close(f)
     f, ax_arr, im_diff = plot_data_diff('Ice aerosol volume',multidata['base'],multidata['updated'],

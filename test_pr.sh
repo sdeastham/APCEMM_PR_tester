@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N APCEMM_PR_test
-#PBS -l select=1:ncpus=1:mem=8gb
+#PBS -l select=1:ncpus=1:mem=8gb:cpu_type=rome
 #PBS -l walltime=4:00:00
 #PBS -j oe
 
@@ -25,7 +25,7 @@ run_log=$( readlink -f log.run )
 start_loc=$PWD
 
 for codebase in base updated; do
-    echo "Beginning work for $codebase"
+    echo "Beginning work for $codebase" 2>&1 | tee -a $run_log
     cd $start_loc
     echo " --> git operations"
     git clone https://github.com/mit-lae/APCEMM Code.APCEMM_$codebase &> log.git
@@ -61,7 +61,7 @@ for codebase in base updated; do
     ln -s ../../Code.APCEMM_$codebase/input_data
     echo " --> beginning run"
     echo "Run for $codebase case:"
-    time ./APCEMM input.yaml &> $run_log
+    time ./APCEMM input.yaml >> $run_log 2>&1
     rc=$?
     if [[ $rc -ne 0 ]]; then
         echo " --> Running $codebase failed with return code $rc"

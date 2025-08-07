@@ -7,5 +7,6 @@ fi
 pr_id=$1
 
 source ~/.bashrc
+eval "$(~/miniforge3/bin/conda shell.bash hook)"
 conda activate gcpy
 python3 compare_runs.py $pr_id
